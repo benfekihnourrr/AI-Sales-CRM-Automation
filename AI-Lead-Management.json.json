@@ -1,0 +1,1442 @@
+{
+  "name": "AI Sales & CRM Automation System",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Request a Consultation",
+        "formDescription": "Tell us about your business needs, and our team will contact you.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Company Name"
+            },
+            {
+              "fieldLabel": "Service Interested In",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "AI Automation"
+                  },
+                  {
+                    "option": "Website Development"
+                  },
+                  {
+                    "option": "Data Analytics"
+                  },
+                  {
+                    "option": "CRM Integration"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Budget",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Under $500"
+                  },
+                  {
+                    "option": "$500–$2,000"
+                  },
+                  {
+                    "option": "$2,000–$5,000"
+                  },
+                  {
+                    "option": "Above $5,000"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Project Details",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6f1d3f46-a158-49d3-ba19-1869e3a40f8a",
+      "name": "On form submission",
+      "webhookId": "07b49ac8-8a3f-429e-a4d7-51f8db076102"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61d17fff-e48a-4742-a703-21852372bd44",
+              "name": "Lead ID",
+              "value": "={{ $execution.id + '-' + $itemIndex }}",
+              "type": "string"
+            },
+            {
+              "id": "756ddfad-e780-42b5-a3c3-deab81ca364c",
+              "name": "=Full Name",
+              "value": "={{ $json['Full Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "870b1be8-b7fa-474b-856a-1fc24cf0ce61",
+              "name": "Email",
+              "value": "={{ $json['Email'] }}",
+              "type": "string"
+            },
+            {
+              "id": "750c830a-73ff-4396-88a2-3ea5c5d49bd9",
+              "name": "Company Name",
+              "value": "={{ $json['Company Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8b6cd027-a451-4dbe-a2a8-33b34eed8583",
+              "name": "Service",
+              "value": "={{ $json['Service Interested In'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0a59b2f4-8393-481f-a5ac-015a481b94db",
+              "name": "Budget",
+              "value": "={{ $json['Budget'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f4e4c8a6-86da-4191-9a8b-d0c93a21f97a",
+              "name": "Project Details",
+              "value": "={{ $json['Project Details'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9eee2a0b-b514-449a-a7dd-7ef43200c3e7",
+              "name": "Lead Status",
+              "value": "New",
+              "type": "string"
+            },
+            {
+              "id": "d9ec474f-8584-4db9-be7c-f6b1ffe28f8f",
+              "name": "Lead Score",
+              "value": "0",
+              "type": "string"
+            },
+            {
+              "id": "afeedc23-eada-4492-ad56-5be34074898d",
+              "name": "Created At",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        144,
+        0
+      ],
+      "id": "22bd0a46-ee2d-48cd-9bc4-0b23025b9c14",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.Email }}",
+            "Company Name": "={{ $json['Company Name'] }}",
+            "Lead ID": "={{ $json['Lead ID'] }}",
+            "Full Name": "={{ $json['Full Name'] }}",
+            "Service": "={{ $json.Service }}",
+            "Budget": "={{ $json.Budget }}",
+            "Project Details": "={{ $json['Project Details'] }}",
+            "Lead Status": "={{ $json['Lead Status'] }}",
+            "Lead Score": "={{ $json['Lead Score'] }}",
+            "Created At": "={{ $json['Created At'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Details",
+              "displayName": "Project Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        0
+      ],
+      "id": "f3daa299-bb8f-47a4-9889-8cf978a6df23",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI sales assistant for a digital services company.\n\nAnalyze the following customer lead:\n\nName: {{ $('Edit Fields').first().json['Full Name'] }}\nCompany: {{ $('Edit Fields').first().json['Company Name'] }}\nService: {{ $('Edit Fields').first().json['Service'] }}\nBudget: {{ $('Edit Fields').first().json['Budget'] }}\nProject Details: {{ $('Edit Fields').first().json['Project Details'] }}\n\nYour tasks:\n1. Classify the lead as Hot, Warm, or Cold.\n2. Assign a lead score from 0 to 100.\n3. Write a short explanation of the score.\n4. Recommend the next sales action.\n\nScoring guidance:\n- Hot: 75-100, clear need, strong buying signals, and suitable budget.\n- Warm: 40-74, some interest but missing important details.\n- Cold: 0-39, vague requirements or low purchase intent.\n- Do not assume missing information is confirmed.\n\nReturn ONLY valid JSON in this format:\n{\n  \"lead_category\": \"Hot\",\n  \"lead_score\": 85,\n  \"reason\": \"Clear project requirements and suitable budget.\",\n  \"next_action\": \"Arrange a consultation call.\"\n}\n\nDo not include markdown or code fences.",
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        432,
+        0
+      ],
+      "id": "cfde7c01-5a9a-49bb-b150-77b0edf39111",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        144
+      ],
+      "id": "cc453433-69ec-4edc-abee-db5566035e00",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IQ1s9cuUYC4qbCCr",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f065057-3be0-4473-85c8-439a5488d134",
+              "name": "=Lead Category",
+              "value": "={{ JSON.parse($json.text).lead_category }}",
+              "type": "string"
+            },
+            {
+              "id": "5ad4923f-80e8-494c-9173-1785316717a9",
+              "name": "=Lead Score",
+              "value": "={{ JSON.parse($json.text).lead_score }}",
+              "type": "number"
+            },
+            {
+              "id": "3c438dfe-1506-4eb1-9f07-472a6e4c7256",
+              "name": "=AI Reason",
+              "value": "={{ JSON.parse($json.text).reason }}",
+              "type": "string"
+            },
+            {
+              "id": "8f548241-0a1c-4a92-b5f0-0e8751e3d4c0",
+              "name": "Next Action",
+              "value": "={{ JSON.parse($json.text).next_action }}",
+              "type": "string"
+            },
+            {
+              "id": "2d0f9330-8909-40cc-a08b-a1be8a087580",
+              "name": "=Lead ID",
+              "value": "={{ $('Edit Fields').first().json['Lead ID'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        704,
+        0
+      ],
+      "id": "955dd3ef-b765-43a4-9abc-cbd0ae36094b",
+      "name": "AI Results"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $json['Lead ID'] }}",
+            "Lead Category": "={{ $json['Lead Category'] }}",
+            "Lead Score": "={{ $json['Lead Score'] }}",
+            "AI Reason": "={{ $json['AI Reason'] }}",
+            "Next Action": "={{ $json['Next Action'] }}"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Project Details",
+              "displayName": "Project Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Category",
+              "displayName": "Lead Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Reason",
+              "displayName": "AI Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Next Action",
+              "displayName": "Next Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        0
+      ],
+      "id": "d7c36319-a663-4058-8048-e6de833ed445",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "Hot",
+                    "rightValue": "={{ $('AI Results').first().json['Lead Category'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7f3dd9d0-b534-4541-8f21-f4a0beea6f22"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9749c285-cf56-46a8-94d9-9ebd4c28788a",
+                    "leftValue": "Warm",
+                    "rightValue": "={{ $('AI Results').first().json['Lead Category'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b645fa49-0d42-426e-b503-1345d321bfee",
+                    "leftValue": "Cold",
+                    "rightValue": "={{ $('AI Results').first().json['Lead Category'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        -16
+      ],
+      "id": "a73757ea-0967-4b83-8df0-6fd8aab8ecb6",
+      "name": "Lead Routing"
+    },
+    {
+      "parameters": {
+        "sendTo": "benfekihnourrr@gmail.com",
+        "subject": "={{ '🔥 HOT LEAD ALERT - ' + $('Edit Fields').first().json['Full Name'] }}",
+        "emailType": "text",
+        "message": "={{ 'NEW HOT LEAD DETECTED!\\n\\nName: ' + $('Edit Fields').first().json['Full Name'] + '\\nEmail: ' + $('Edit Fields').first().json['Email'] + '\\nCompany: ' + $('Edit Fields').first().json['Company Name'] + '\\nService: ' + $('Edit Fields').first().json['Service'] + '\\nBudget: ' + $('Edit Fields').first().json['Budget'] + '\\n\\nLead Category: ' + $('AI Results').first().json['Lead Category'] + '\\nLead Score: ' + $('AI Results').first().json['Lead Score'] + '/100\\n\\nAI Reason: ' + $('AI Results').first().json['AI Reason'] + '\\n\\nRecommended Action: ' + $('AI Results').first().json['Next Action'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1248,
+        -224
+      ],
+      "id": "23ce3663-04b0-43aa-bc6b-1e3b6a1a1aa0",
+      "name": "Send a message",
+      "webhookId": "ba3cfcf8-8df5-47a1-94ac-c7d84acccd7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WH3ijzuaC1gGEHVQ",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $('AI Results').first().json['Lead ID'] }}",
+            "Lead Status": "Sales Notified"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Details",
+              "displayName": "Project Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Category",
+              "displayName": "Lead Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Reason",
+              "displayName": "AI Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Next Action",
+              "displayName": "Next Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1392,
+        -224
+      ],
+      "id": "c4da780f-3397-4cfd-9ab5-c753d690bf2d",
+      "name": "Hot Lead - Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ 'Following up on your ' + $('Edit Fields').first().json['Service'] + ' inquiry' }}",
+        "message": "={{ $json.text }}",
+        "options": {
+          "sendTo": "={{ $('Edit Fields').first().json['Email'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        0
+      ],
+      "id": "f2e3524d-b86e-40eb-b27b-e669efcdf31e",
+      "name": "Create a draft",
+      "webhookId": "1f974525-0f5f-42af-81a4-a3193a6cebde",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WH3ijzuaC1gGEHVQ",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional sales assistant for a digital services company.\n\nWrite a friendly and personalized follow-up email for this potential customer.\n\nCustomer Name: {{ $('Edit Fields').first().json['Full Name'] }}\nCompany: {{ $('Edit Fields').first().json['Company Name'] }}\nService Interested In: {{ $('Edit Fields').first().json['Service'] }}\nBudget: {{ $('Edit Fields').first().json['Budget'] }}\nProject Details: {{ $('Edit Fields').first().json['Project Details'] }}\nAI Recommended Action: {{ $('AI Results').first().json['Next Action'] }}\n\nInstructions:\n- Thank the customer for their interest.\n- Refer to their specific business needs.\n- Explain how we could help, without promising unverified capabilities.\n- Ask one or two useful questions to better understand their requirements.\n- Invite them to discuss their project.\n- Keep the tone friendly and professional.\n- Keep the email under 180 words.\n- Do not invent pricing, discounts, guarantees, or availability.\n- Do not claim an appointment has already been booked.\n- Return only the email body as plain text.\n- Do not include a subject line.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "dd1073ee-faa4-4f5f-8176-4e123654a1cd",
+      "name": "Warm Lead - AI Follow-up"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1248,
+        160
+      ],
+      "id": "1a8c6cb2-6407-47eb-8f34-cd917a55f833",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Fz9PEbMzs07Zveah",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $('AI Results').first().json['Lead ID'] }}",
+            "Lead Status": "Follow-up Drafted"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Details",
+              "displayName": "Project Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Category",
+              "displayName": "Lead Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Reason",
+              "displayName": "AI Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Next Action",
+              "displayName": "Next Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1696,
+        0
+      ],
+      "id": "ea9c7acc-3909-4f62-8c77-1e868f424706",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $('AI Results').first().json['Lead ID'] }}",
+            "Lead Status": "Nurture Later"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Details",
+              "displayName": "Project Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Category",
+              "displayName": "Lead Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Reason",
+              "displayName": "AI Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Next Action",
+              "displayName": "Next Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1232,
+        304
+      ],
+      "id": "be62e788-ba17-4847-9885-5a8834e0be54",
+      "name": "Cold Lead - Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "AI Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Results": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Lead Routing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Routing": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Warm Lead - AI Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cold Lead - Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Hot Lead - Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warm Lead - AI Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Warm Lead - AI Follow-up",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c31751e5-471d-453d-90da-c96a188a1cbe",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "360d7a71ff7dfb9d95c456b77f17c703ec2039b593646f19cd12c327e8750d4b"
+  },
+  "nodeGroups": [],
+  "id": "iFNXyeStaejuz8TH",
+  "tags": []
+}
