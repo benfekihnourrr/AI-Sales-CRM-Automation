@@ -1,0 +1,411 @@
+{
+  "name": "AI CRM - Daily Follow-up Scheduler",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3901f71c-ca05-43d8-802f-1cfcfa55a4e0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        160,
+        0
+      ],
+      "id": "c1ae6c14-987a-40a5-a290-7d19ba648fb6",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9da07f48-5d39-4b9e-bfbf-4323ffe8c803",
+              "leftValue": "={{ $json['Lead Status'] }}",
+              "rightValue": "Follow-up Drafted",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "81c560b1-cde5-45a5-9754-ea5ef347b83e",
+              "leftValue": "={{ DateTime.fromISO($json['Next Follow-up Date']).startOf('day').toISO() }}",
+              "rightValue": "={{ $now.toISO() }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            },
+            {
+              "id": "10e5a810-2f13-45f6-8c27-8a9bc0fc5117",
+              "leftValue": "={{ $json['Last Reminder Sent Date'] || '' }}",
+              "rightValue": "={{ $now.toFormat('yyyy-MM-dd') }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        0
+      ],
+      "id": "29732668-0f86-4d9b-a3ad-55bb3716bf13",
+      "name": "Follow-up Due Filter"
+    },
+    {
+      "parameters": {
+        "sendTo": "benfekihnourrr@gmail.com",
+        "subject": "={{ '⏰ Follow-up Due - ' + $json['Full Name'] }}",
+        "emailType": "text",
+        "message": "={{ 'FOLLOW-UP REMINDER\\n\\n' + 'Lead: ' + $json['Full Name'] + '\\n' + 'Email: ' + $json['Email'] + '\\n' + 'Company: ' + $json['Company Name'] + '\\n' + 'Service: ' + $json['Service'] + '\\n' + 'Lead Category: ' + $json['Lead Category'] + '\\n' + 'Lead Score: ' + $json['Lead Score'] + '/100\\n' + 'Follow-up Due: ' + $json['Next Follow-up Date'] + '\\n' + 'Recommended Action: ' + $json['Next Action'] + '\\n' + 'Notes: ' + ($json['Follow-up Notes'] || 'None') + '\\n\\nPlease review this lead and follow up.' + '\\nLead ID: ' + $json['Lead ID'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        0
+      ],
+      "id": "7d28c02f-9808-43e5-a3d7-c5e36908c127",
+      "name": "Daily Follow-up Reminder",
+      "webhookId": "9b84709e-86e8-4a3c-acb7-4b87445cbc94",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WH3ijzuaC1gGEHVQ",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4",
+          "mode": "list",
+          "cachedResultName": "AI Sales CRM Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NuXftcMzrJSMnbSC2yIBgbLCyGvfjThWgpY9Bc7BNk4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $('Follow-up Due Filter').item.json['Lead ID'] }}",
+            "Last Reminder Sent Date": "={{ $now.toFormat('yyyy-MM-dd') }}"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Details",
+              "displayName": "Project Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Category",
+              "displayName": "Lead Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Reason",
+              "displayName": "AI Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Next Action",
+              "displayName": "Next Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Next Follow-up Date",
+              "displayName": "Next Follow-up Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Follow-up Date",
+              "displayName": "Last Follow-up Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Follow-up Notes",
+              "displayName": "Follow-up Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Reminder Sent Date",
+              "displayName": "Last Reminder Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        0
+      ],
+      "id": "47fde0aa-bd22-4fae-8c09-e3b021a13300",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZRvMOYcRLBGv3UGs",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Follow-up Due Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-up Due Filter": {
+      "main": [
+        [
+          {
+            "node": "Daily Follow-up Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Follow-up Reminder": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kuala_Lumpur",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "f03a4b47-52c4-4b96-9018-6a115a403ec5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "360d7a71ff7dfb9d95c456b77f17c703ec2039b593646f19cd12c327e8750d4b"
+  },
+  "nodeGroups": [],
+  "id": "O7lZdUh0ziXdHHKr",
+  "tags": []
+}
